@@ -66,6 +66,21 @@ create_pieces([H|T]):-
             piece_empty(H),
             create_pieces(T).
 
+
+change_piece(B,R,C,P):-
+            get_ele(B,R,E1),
+            get_ele(E1,C,E2),
+            E2 is P.
+
+get_ele(H,N,E):-
+            get_ele_aux(H,N,R,0).
+
+get_ele_aux([H|T],N,E,I):-
+            I \= N,
+            R is H,
+            I1 is N+1,
+            get_ele_aux(T,N,R,I1).
+            
 %Display Board
 
 display_board(H):- 
