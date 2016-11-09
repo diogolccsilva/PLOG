@@ -1,3 +1,6 @@
+%Pieces
+
+%e
 piece_empty([
     [' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' '],
@@ -6,6 +9,7 @@ piece_empty([
     [' ',' ',' ',' ',' ']
     ]).
 
+%w1
 white_small([
     [' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' '],
@@ -13,6 +17,7 @@ white_small([
     [' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ']]).
 
+%w2
 white_medium([
     [' ',' ',' ',' ',' '],
     [' ','W','W','W',' '],
@@ -20,6 +25,7 @@ white_medium([
     [' ','W','W','W',' '],
     [' ',' ',' ',' ',' ']]).
 
+%w3
 white_big([
     ['W','W','W','W','W'],
     ['W','W','W','W','W'],
@@ -27,6 +33,7 @@ white_big([
     ['W','W','W','W','W'],
     ['W','W','W','W','W']]).
 
+%r1
 red_small([
     [' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' '],
@@ -34,6 +41,7 @@ red_small([
     [' ',' ',' ',' ',' '],
     [' ',' ',' ',' ',' ']]).
 
+%r2
 red_medium([
     [' ',' ',' ',' ',' '],
     [' ','R','R','R',' '],
@@ -41,6 +49,7 @@ red_medium([
     [' ','R','R','R',' '],
     [' ',' ',' ',' ',' ']]).
 
+%r3
 red_big([
     ['R','R','R','R','R'],
     ['R','R','R','R','R'],
@@ -48,55 +57,127 @@ red_big([
     ['R','R','R','R','R'],
     ['R','R','R','R','R']]).
 
+%Boards
+
+default_board([
+    [3,0,0,0,0,0,0,0,3],
+    [0,0,2,1,1,1,2,0,0],
+    [0,0,0,0,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,4,0,0,0,0],
+    [0,0,5,4,4,4,5,0,0],
+    [6,0,0,0,0,0,0,0,6]]).
 
 %Create Board
 
-create_board(H):- 
+new_board(H):- create_board(H,9).
+
+create_board(H,N):-
             length(H,9),
             create_rows(H).
 
 create_rows([]).
-create_rows([H|T]):- 
+create_rows([H|T]):-
             length(H,9),
             create_pieces(H),
             create_rows(T).
 
 create_pieces([]).
-create_pieces([H|T]):- 
-            piece_empty(H),
+create_pieces([H|T]):-
+            H is 0,
             create_pieces(T).
-            
+
+%Change piece
+
+set_piece(B,R,C,P).
+
+set_piece_row([H|T],R,C,P):-
+            R > 0,
+            R1 is R-1,
+            set_piece_row(T,R1,C,P).
+set_piece_row([H|T],R,C,P):-
+            set_piece_col(H,C,P).
+set_piece_col([H|T],C,P):-
+            C > 0,
+            C1 is C-1,
+            set_piece_col(T,R,C1,P).
+set_piece_col([H|T],C,P):-
+            set_piece_aux(H,P).
+set_piece_aux(H,P):-
+            H is P.
+
+%Set Board
+
+
+
 %Display Board
 
-display_board(H):- 
+display_board([]).
+display_board(H):-
             display_line(73),
-            display_line(73), 
+            display_line(73),
             display_board_aux(H).
 
-displat_board_aux([]).
-display_board_aux([H|T]):- 
-            display_board_row(H,1), 
+display_board_aux([]).
+display_board_aux([H|T]):-
+            display_board_row(H,1),
             display_board_aux(T).
 
-display_board_row([],N).
 display_board_row(H,N):-
-            N>3,
-            display_line(73).
-display_board_row(H,N):- 
-            N < 4,
-            display_board_line(H,N), 
+            N < 6,
+            display_board_row_aux(H,N),
             write('|'),
             nl,
             N1 is N+1,
             display_board_row(H,N1).
+display_board_row(H,N):-
+            display_line(73).
 
-display_board_line([],N).
-display_board_line([H|T],N):- 
-            write('| '), 
-            nth1(N,H,R), 
-            display_piece_line(R), 
-            write(' '), 
-            display_board_line(T,N).
+display_board_row_aux([],N).
+display_board_row_aux([H|T],N):-
+            H = 1,
+            white_small(P),
+            display_piece(P,N),
+            display_board_row_aux(T,N).
+display_board_row_aux([H|T],N):-
+            H = 2,
+            white_medium(P),
+            display_piece(P,N),
+            display_board_row_aux(T,N).
+display_board_row_aux([H|T],N):-
+            H = 3,
+            white_big(P),
+            display_piece(P,N),
+            display_board_row_aux(T,N).
+display_board_row_aux([H|T],N):-
+            H = 4,
+            red_small(P),
+            display_piece(P,N),
+            display_board_row_aux(T,N).
+display_board_row_aux([H|T],N):-
+            H = 5,
+            red_medium(P),
+            display_piece(P,N),
+            display_board_row_aux(T,N).
+display_board_row_aux([H|T],N):-
+            H = 6,
+            red_big(P),
+            display_piece(P,N),
+            display_board_row_aux(T,N).
+display_board_row_aux([H|T],N):-
+            H = 0,
+            piece_empty(P),
+            display_piece(P,N),
+            display_board_row_aux(T,N).
+
+display_piece([],N).
+display_piece(P,N):-
+            nth1(N,P,R), 
+            write('| '),
+            display_piece_line(R),
+            write(' ').
 
 display_piece_line([]).
 display_piece_line([H|T]):- 
