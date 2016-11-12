@@ -1,33 +1,103 @@
 %Utility_functions
 
 
-%%Check position R-C%%%
-
-verify_position(B, R, C) :-
-    checkPlaceAuxL(B, R, C, 1).
-
-verify_positionAux([H|T], R, C, NR) :-
-    NR \= R,
-    NR1 is NR + 1,
-    checkPlaceAuxR(T, R, C, NR1).
-checkPlaceAuxR([H|T], R, C, NL) :-
-    NR = R,
-    checkPlaceAuxC(H, C, 1).
-
-checkPlaceAuxC([H|T], C, NC) :-
-    C \= NC,
-    NC1 is NC+1,
-    checkPlaceAuxC(T, R, NC1).
-checkPlaceAuxC([H|T], R, NC) :-
-    C = NC,
-    checkSpot(H, 0).
-	
-
-	
-%%	
-
+%%Check position %%%
 	
 	
+return_position(B,R,C,POS):-
+	return_positionAuxR(B,R,C,1,POS).
+	
+return_positionAuxR([H|T],R,C,NR,POS) :-
+	NR \= R,
+	NR1 is NR +1,
+return_positionAuxR(T,R,C,NR1,POS).
+
+return_positionAuxR([H|T],R,C,NR,POS):-
+	NR = R,
+return_positionAuxC(H,C,1,POS).
+
+return_positionAuxC([H|T],C,NC,POS):-
+		C\= NC,
+		NC1 is NC+1,
+	return_positionAuxC(T,C,NC1,POS).
+	
+return_positionAuxC([H|T],C,NC,POS):-
+	C = NC,
+	reportPosition(H,POS).
+		
+reportPosition(H,POS) :-
+	POS = H.
+	
+
+%%Check Piece at location%%%
+
+validate_move(B,PR,PC,TR,TC):-
+	
+	return_position(B,PR,PC,T),
+	check_piece(T,PR,PC,TR,TC).
+	
+	
+
+
+
+check_piece(T,PR,PC,TR,TC):-
+		T = 0,
+		write('Not a valid piece location').
+		
+check_piece(T,PR,PC,TR,TC):-
+		T = 1,
+		write('1 block piece'),
+		valid_location(1,PR,PC,TR,TC).
+		
+		
+check_piece(T,PR,PC,TR,TC):-
+		T = 2,
+		write('2 blocks piece'),
+		valid_location(2,PR,PC,TR,TC).
+
+		
+check_piece(T,PR,PC,TR,TC):-
+		T = 3,
+		write('3 blocks piece'),	
+		valid_location(3,PR,PC,TR,TC).
+			
+		
+
+
+valid_location(V,PR,PC,TR,TC):-
+		PR = TR,
+		valid_locationAux(V,PC,TC).
+		
+		
+valid_location(V,PR,PC,TR,TC):-
+		PC = TC,
+		valid_locationAux(V,PR,TR).		
+
+
+valid_locationAux(V,A1,A2):-
+		A3 is A1 - A2,
+		abs(A3) < V+1,
+		nl,
+		write('valid movement').		
+	
+
+%Input functions 
+
+
+/*piece row piece collumn target row target collumn */
+askForMove(PR, PC, TR, TC) :-
+	nl,
+    write('Choose Row of Piece to move'),
+    read(PR),
+    write('Choose Collumm of Piece to move'),
+    read(PC),
+	write('Choose target Row'),
+    read(TR),
+    write('Choose target Collumm'),
+    read(TC).		
+	
+	
+	/*	this is trash so far 
 checkSurroundings(B, R, C, P) :-
     R1 is R + 1,
     R2 is R - 1,
@@ -59,8 +129,7 @@ checkAdjacentFreeSpace(B, R, C) :-
 	
 	
 		
-	checkSpot([P, G], P1) :-
-    P = P1.
+
 	
 %%% in dev still %%%%	
 getCoord(B, C, L, X) :-
@@ -88,4 +157,6 @@ getCoordL([H | T], C, X, NC) :-
     C = NC,
     getPointP(H, X).
 
-getPointP([P, G], [P, G]).
+getPointP([P, G], [P, G]). */
+	
+	
