@@ -12,6 +12,7 @@ chooseGameMode :-
 	write('4. AI vs AI; (WIP)\n'),
 	write('Please choose one of the game modes listed above: '),
 	read(GM),
+	nl,
 	startGame(GM).
 
 startGame(GM):-
@@ -31,22 +32,10 @@ startGame(GM):-
 	chooseGameMode.
 
 game(B,TURN):-
-	CK is mod(TURN,2),
-	CK = 0,
 	display_board(B),
 	game_status(B),
-	write('White\'s turn\n'),
-	read(A),
-	check_game(B),
-	NT is TURN + 1,
-	game(B,NT).
-game(B,TURN):-
-	CK is mod(TURN,2),
-	CK \= 0,
-	display_board(B),
-	game_status(B),
-	write('Red\'s turn\n'),
-	read(A),
+	game_turn(TURN),
+	askForPiece(PR, PC),
 	check_game(B),
 	NT is TURN + 1,
 	game(B,NT).
@@ -62,6 +51,15 @@ game_status(B):-
 	write(R),
 	write(')\n').
 
+game_turn(TURN):-
+	CK is mod(TURN,2),
+	CK \= 0,
+	write('Red\'s turn\n').
+game_turn(TURN):-
+	CK is mod(TURN,2),
+	CK = 0,
+	write('White\'s turn\n').
+
 check_game(B):-
 	count_red(B,C),
 	C = 0,
@@ -73,3 +71,23 @@ check_game(B):-
 	write('Red wins, congrats!\n'),
 	fail.
 check_game(B).
+
+askForPiece(PR, PC):-
+	askForRow(PR),
+	askForCol(PC).
+
+askForRow(PR):-
+	repeat,
+	write('Choose Row of Piece to move (1 to 9): '),
+    read(PR),
+	nl,
+	(PR < 10, PR > 0),
+	!.
+
+askForCol(PC):-
+	repeat,
+	write('Choose Collumm of Piece to move (1 to 9): '),
+    read(PC),
+	nl,
+	(PC < 10, PC > 0),
+	!.

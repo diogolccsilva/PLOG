@@ -9,14 +9,17 @@ return_position(B,R,C,POS):-
 return_positionAuxR([H|T],R,C,NR,POS) :-
 	NR \= R,
 	NR1 is NR +1,
+	!,
     return_positionAuxR(T,R,C,NR1,POS).
 return_positionAuxR([H|T],R,C,NR,POS):-
 	NR = R,
+	!,
     return_positionAuxC(H,C,1,POS).
 
 return_positionAuxC([H|T],C,NC,POS):-
 	C\= NC,
 	NC1 is NC+1,
+	!,
 	return_positionAuxC(T,C,NC1,POS).
 return_positionAuxC([H|T],C,NC,POS):-
 	C = NC,
@@ -58,26 +61,56 @@ valid_locationAux(V,A1,A2):-
 	A3 is A1 - A2,
 	abs(A3) < V+1,
 	nl,
-	write('valid movement').		
-	
+	write('valid movement').
 
-%Input functions 
+/* Check move */
 
+check_move(B,R,C,N,D):-
+	(D >= 0 , D < 2),
+	D1 is mod(D,2),
+	!,
+	check_horizontal(B,R,C,N,D1). %direction horizontal
 
-/*piece row piece collumn target row target collumn */
-askForMove(PR, PC, TR, TC):-
-	nl,
-    write('Choose Row of Piece to move (1 to 9): '),
-    read(PR),
-    write('Choose Collumm of Piece to move (1 to 9): '),
-    read(PC),
-	write('Choose target Row (1 to 9): '),
-    read(TR),
-    write('Choose target Collumm (1 to 9): '),
-    read(TC).
+check_move(B,R,C,N,D):-
+	(D > 1, D < 4),
+	D1 is mod(D,2),
+	!,
+	check_vertical(B,R,C,N,D1). %direction vertical
 
-	
-	
+check_move(B,R,C,N,D):-
+	fail.
+
+check_horizontal(B,R,C,N,D):-
+	get_row(B,R,L),
+	return_position(B,R,C,P),
+	V is mod(P,4),
+	check(L,C,V,N).
+
+check_vertical(B,R,C,N,D):-
+	get_col(B,C,L),
+	return_position(B,R,C,P),
+	V is mod(P,4),
+	check(L,R,V,N).
+
+check(L,P,V,N):-
+	N1 is N + V,
+	check(L,P,V,N1,1).
+check([],_,_,_,_).
+check([H|T],P,V,N,I):-
+	I =< P,
+	I1 is I + 1,
+	!,
+	check(T,P,V,N,I1).
+check([H|T],P,V,N,I):-
+	N > 0,
+	N1 is N-1,
+	V1 is V - abs(sign(H)),
+	V1 >= 0,
+	!,
+	check(T,P,V1,N1,I).
+check([H|T],P,V,N,I):-
+	N =< 0.
+
 /* Count pieces for each color */
 
 count_total(B,C):-
@@ -104,7 +137,7 @@ count_pieces_aux([H|T],N,A,C):-
 	count_pieces_aux(T,N,A1,C).
 count_pieces_aux([H|T],N,A,C):-
 	count_pieces_aux(T,N,A,C).		
-	
+
 
 /* this is trash so far */
 
