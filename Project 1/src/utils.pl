@@ -160,7 +160,8 @@ move_horizontal(B,PR,PC,N,V,D,NB):-
 	D = 1,
 	get_row(B,PR,L),
 	reverse_list(L,L1),
-	move_aux(L1,9-PC,N,V,NL),
+	PC1 is 10 - PC,
+	move_aux(L1,PC1,N,V,NL),
 	reverse_list(NL,FL),
 	set_row(B,PR,FL,NB).
 
@@ -173,7 +174,8 @@ move_vertical(B,PR,PC,N,V,D,NB):-
 	D = 1,
 	get_col(B,PC,L),
 	reverse_list(L,L1),
-	move_aux(L1,9-PR,N,V,NL),
+	PR1 is 10 - PR,
+	move_aux(L1,PR1,N,V,NL),
 	reverse_list(NL,FL),
 	set_col(B,PC,FL,NB).
 
