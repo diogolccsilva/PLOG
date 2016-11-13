@@ -7,9 +7,9 @@ oshi :-
 chooseGameMode :-
 	write('There are 4 game modes you can choose:\n'),
 	write('1. Player vs Player;\n'),
-	write('2. Player vs AI (easy);\n'),
-	write('3. Player vs AI (hard);\n'),
-	write('4. AI vs AI;\n'),
+	write('2. Player vs AI (easy); (WIP)\n'),
+	write('3. Player vs AI (hard); (WIP)\n'),
+	write('4. AI vs AI; (WIP)\n'),
 	write('Please choose one of the game modes listed above: '),
 	read(GM),
 	startGame(GM).
@@ -31,7 +31,45 @@ startGame(GM):-
 	chooseGameMode.
 
 game(B,TURN):-
-	TURN = 0,
+	CK is mod(TURN,2),
+	CK = 0,
 	display_board(B),
-	askForMove(PR, PC, TR, TC),
-	validate_move(B,PR,PC,TR,TC).
+	game_status(B),
+	write('White\'s turn\n'),
+	read(A),
+	check_game(B),
+	NT is TURN + 1,
+	game(B,NT).
+game(B,TURN):-
+	CK is mod(TURN,2),
+	CK \= 0,
+	display_board(B),
+	game_status(B),
+	write('Red\'s turn\n'),
+	read(A),
+	check_game(B),
+	NT is TURN + 1,
+	game(B,NT).
+game(B,_):-
+	write('End of game!\n').
+
+game_status(B):-
+	count_white(B,W),
+	count_red(B,R),
+	write('(White - '),
+	write(W),
+	write(') (Red - '),
+	write(R),
+	write(')\n').
+
+check_game(B):-
+	count_red(B,C),
+	C = 0,
+	write('White wins, congrats!\n'),
+	fail.
+check_game(B):-
+	count_white(B,C),
+	C = 0,
+	write('Red wins, congrats!\n'),
+	fail.
+check_game(B).

@@ -36,15 +36,15 @@ check_piece(T,PR,PC,TR,TC):-
 	T = 0,
 	write('Not a valid piece location').
 check_piece(T,PR,PC,TR,TC):-
-	(T = 1; T == 4),
+	mod(T,4) = 1,
 	write('1 block piece'),
 	valid_location(1,PR,PC,TR,TC).	
 check_piece(T,PR,PC,TR,TC):-
-	(T == 2; T == 5),
+	mod(T,4) = 2,
 	write('2 blocks piece'),
 	valid_location(2,PR,PC,TR,TC).
 check_piece(T,PR,PC,TR,TC):-
-	(T == 3; T == 6),
+	mod(T,4) = 3,
 	write('3 blocks piece'),	
 	valid_location(3,PR,PC,TR,TC).
 
@@ -89,10 +89,11 @@ count_white(B,C):-
 	count_pieces(B,4,0,C).
 
 count_red(B,C):-
-	count_pieces(B,7,0,C).
+	count_pieces(B,8,0,C).
 
 count_pieces([H|T],N,A,C):-
 	count_pieces_aux(H,N,A,C1),
+	!,
 	count_pieces(T,N,C1,C).
 count_pieces([],_,C,C).
 
