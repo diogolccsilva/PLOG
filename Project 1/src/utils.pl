@@ -1,100 +1,82 @@
-%Utility_functions
+/* Utility_functions */
 
 
 %%Check position %%%
-	
-	
+
+
+/* Change the name of this since it returns the piece and not the position */
 return_position(B,R,C,POS):-
 	return_positionAuxR(B,R,C,1,POS).
 	
 return_positionAuxR([H|T],R,C,NR,POS) :-
 	NR \= R,
 	NR1 is NR +1,
-return_positionAuxR(T,R,C,NR1,POS).
-
+    return_positionAuxR(T,R,C,NR1,POS).
 return_positionAuxR([H|T],R,C,NR,POS):-
 	NR = R,
-return_positionAuxC(H,C,1,POS).
+    return_positionAuxC(H,C,1,POS).
 
 return_positionAuxC([H|T],C,NC,POS):-
-		C\= NC,
-		NC1 is NC+1,
+	C\= NC,
+	NC1 is NC+1,
 	return_positionAuxC(T,C,NC1,POS).
-	
 return_positionAuxC([H|T],C,NC,POS):-
 	C = NC,
 	reportPosition(H,POS).
 		
 reportPosition(H,POS) :-
-	POS = H.
-	
+	POS is H.
+
 
 %%Check Piece at location%%%
 
 validate_move(B,PR,PC,TR,TC):-
-	
 	return_position(B,PR,PC,T),
 	check_piece(T,PR,PC,TR,TC).
-	
-	
-
-
 
 check_piece(T,PR,PC,TR,TC):-
-		T = 0,
-		write('Not a valid piece location').
-		
+	T = 0,
+	write('Not a valid piece location').
 check_piece(T,PR,PC,TR,TC):-
-		T = 1,
-		write('1 block piece'),
-		valid_location(1,PR,PC,TR,TC).
-		
-		
+	(T = 1; T == 4),
+	write('1 block piece'),
+	valid_location(1,PR,PC,TR,TC).	
 check_piece(T,PR,PC,TR,TC):-
-		T = 2,
-		write('2 blocks piece'),
-		valid_location(2,PR,PC,TR,TC).
-
-		
+	(T == 2; T == 5),
+	write('2 blocks piece'),
+	valid_location(2,PR,PC,TR,TC).
 check_piece(T,PR,PC,TR,TC):-
-		T = 3,
-		write('3 blocks piece'),	
-		valid_location(3,PR,PC,TR,TC).
-			
-		
-
+	(T == 3; T == 6),
+	write('3 blocks piece'),	
+	valid_location(3,PR,PC,TR,TC).
 
 valid_location(V,PR,PC,TR,TC):-
-		PR = TR,
-		valid_locationAux(V,PC,TC).
-		
-		
+	PR = TR,
+	valid_locationAux(V,PC,TC).		
 valid_location(V,PR,PC,TR,TC):-
-		PC = TC,
-		valid_locationAux(V,PR,TR).		
-
-
+	PC = TC,
+	valid_locationAux(V,PR,TR).		
 valid_locationAux(V,A1,A2):-
-		A3 is A1 - A2,
-		abs(A3) < V+1,
-		nl,
-		write('valid movement').		
+	A3 is A1 - A2,
+	abs(A3) < V+1,
+	nl,
+	write('valid movement').		
 	
 
 %Input functions 
 
 
 /*piece row piece collumn target row target collumn */
-askForMove(PR, PC, TR, TC) :-
+askForMove(PR, PC, TR, TC):-
 	nl,
-    write('Choose Row of Piece to move'),
+    write('Choose Row of Piece to move (1 to 9): '),
     read(PR),
-    write('Choose Collumm of Piece to move'),
+    write('Choose Collumm of Piece to move (1 to 9): '),
     read(PC),
-	write('Choose target Row'),
+	write('Choose target Row (1 to 9): '),
     read(TR),
-    write('Choose target Collumm'),
-    read(TC).		
+    write('Choose target Collumm (1 to 9): '),
+    read(TC).	
 	
 	
 	/*	this is trash so far 

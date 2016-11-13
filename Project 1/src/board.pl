@@ -1,3 +1,5 @@
+/* Board creation and display */
+
 %Pieces
 
 %e
