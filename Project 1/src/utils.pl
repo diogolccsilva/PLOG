@@ -77,7 +77,29 @@ askForMove(PR, PC, TR, TC):-
     read(TR),
     write('Choose target Collumm (1 to 9): '),
     read(TC).	
+
 	
+	
+%felt like doing function to count pieces
+
+count_pieces(B,VR, VW) :-
+	count_piecesAux(B,0,0).
+
+count_piecesAux([H|T],R,W) :-
+		H \= 0,
+		count_piecesAux(T,R,W).	
+/*
+count_piecesAux([H|T],R,W) :-
+		(H = 1;H = 2;H = 3),
+		W1 is W + 1,
+		count_piecesAux(T,R,W1).
+		
+count_piecesAux([H|T],R,W) :-
+		(H = 4;H = 5;H = 6),
+		R1 is R + 1,
+		count_piecesAux(T,R1,W).		
+	
+
 	
 	/*	this is trash so far 
 checkSurroundings(B, R, C, P) :-
