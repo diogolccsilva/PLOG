@@ -80,29 +80,27 @@ askForMove(PR, PC, TR, TC):-
 	
 /* felt like doing function to count pieces */
 
-count_pieces(B,VR, VW) :-
-	count_piecesAux(B,0,0).
+count_white(B,C):-
+	count_pieces(B,4,0,C).
 
-count_piecesAux([H|T],R,W) :-
-		H \= 0,
-		count_piecesAux(T,R,W).
+count_red(B,C):-
+	count_pieces(B,7,0,C).
 
-count_red(B,N):-
-	N is 0,
-	count_red_rows(B,N).
+count_pieces([H|T],N,A,C):-
+	count_pieces_aux(H,N,A,C1),
+	count_pieces(T,N,C1,C).
+count_pieces([],_,C,C).
 
-count_red_rows([],N).
-count_red_rows([H|T],N):-
-	count_red_aux(B,N),
-	count_red_rows(T,N).
-
-count_red_aux([],N).
-count_red_aux([H|T],N):-
-	(H < 4; H > 0),
-	N is N+1,
-	count_red_aux(T,N).
-count_red_aux([H|T],N):-
-	count_red_aux(T,N).
+count_pieces_aux([],_,C,C).
+count_pieces_aux([H|T],N,A,C):-
+	(H < N, H > N - 4),
+	write('1 piece\n'),
+	A1 is A+1,
+	write(A1),
+	nl,
+	count_pieces_aux(T,N,A1,C).
+count_pieces_aux([H|T],N,A,C):-
+	count_pieces_aux(T,N,A,C).
 
 /*
 count_piecesAux([H|T],R,W) :-
