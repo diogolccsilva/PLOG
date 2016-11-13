@@ -1,10 +1,8 @@
 /* Utility_functions */
 
 
-%%Check position %%%
+/* Check position */
 
-
-/* Change the name of this since it returns the piece and not the position */
 return_position(B,R,C,POS):-
 	return_positionAuxR(B,R,C,1,POS).
 	
@@ -28,7 +26,7 @@ reportPosition(H,POS) :-
 	POS is H.
 
 
-%%Check Piece at location%%%
+/* Check Piece at location */
 
 validate_move(B,PR,PC,TR,TC):-
 	return_position(B,PR,PC,T),
@@ -76,18 +74,36 @@ askForMove(PR, PC, TR, TC):-
 	write('Choose target Row (1 to 9): '),
     read(TR),
     write('Choose target Collumm (1 to 9): '),
-    read(TC).	
+    read(TC).
 
 	
 	
-%felt like doing function to count pieces
+/* felt like doing function to count pieces */
 
 count_pieces(B,VR, VW) :-
 	count_piecesAux(B,0,0).
 
 count_piecesAux([H|T],R,W) :-
 		H \= 0,
-		count_piecesAux(T,R,W).	
+		count_piecesAux(T,R,W).
+
+count_red(B,N):-
+	N is 0,
+	count_red_rows(B,N).
+
+count_red_rows([],N).
+count_red_rows([H|T],N):-
+	count_red_aux(B,N),
+	count_red_rows(T,N).
+
+count_red_aux([],N).
+count_red_aux([H|T],N):-
+	(H < 4; H > 0),
+	N is N+1,
+	count_red_aux(T,N).
+count_red_aux([H|T],N):-
+	count_red_aux(T,N).
+
 /*
 count_piecesAux([H|T],R,W) :-
 		(H = 1;H = 2;H = 3),
@@ -97,11 +113,12 @@ count_piecesAux([H|T],R,W) :-
 count_piecesAux([H|T],R,W) :-
 		(H = 4;H = 5;H = 6),
 		R1 is R + 1,
-		count_piecesAux(T,R1,W).		
+		count_piecesAux(T,R1,W).*/		
 	
 
-	
-	/*	this is trash so far 
+/* this is trash so far */
+
+/*
 checkSurroundings(B, R, C, P) :-
     R1 is R + 1,
     R2 is R - 1,
@@ -128,14 +145,15 @@ checkAdjacentFreeSpace(B, R, C) :-
     C2 is C - 1,
     getCoord(B, R, C2, X),
     checkSpot(X, 0).	
-	
-	
+*/
 	
 	
 		
 
 	
-%%% in dev still %%%%	
+/* in dev still */
+
+/*	
 getCoord(B, C, L, X) :-
     getCoordR(B, C, L, X, 1).
 
@@ -162,5 +180,3 @@ getCoordL([H | T], C, X, NC) :-
     getPointP(H, X).
 
 getPointP([P, G], [P, G]). */
-	
-	
