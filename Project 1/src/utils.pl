@@ -160,7 +160,7 @@ move_horizontal(B,PR,PC,N,V,D,NB):-
 	D = 1,
 	get_row(B,PR,L),
 	reverse_list(L,L1),
-	move_aux(L1,10-PC,N,V,NL),
+	move_aux(L1,9-PC,N,V,NL),
 	reverse_list(NL,FL),
 	set_row(B,PR,FL,NB).
 
@@ -173,7 +173,7 @@ move_vertical(B,PR,PC,N,V,D,NB):-
 	D = 1,
 	get_col(B,PC,L),
 	reverse_list(L,L1),
-	move_aux(L1,10-PR,N,V,NL),
+	move_aux(L1,9-PR,N,V,NL),
 	reverse_list(NL,FL),
 	set_col(B,PC,FL,NB).
 
@@ -184,19 +184,15 @@ move_aux(L,P,N,V,NL):-
 	move_aux(L,P,V,NL1,1,0),
 	P1 is P + 1,
 	move_aux(NL1,P1,N1,V,NL).
-move_aux([H|T],P,N,[NE|T1],I,NE):-
-	N>=0,
-	N1 is N - 1,
-	I1 is I + 1,
-	move_aux(T,P,N1,T1,I1,H).
-move_aux([H|T],P,N,[NE|T1],I,NE):-
-	N>=0,
-	N1 is N - 1,
-	I1 is I + 1,
-	move_aux(T,P,N1,T1,I1,H).
 move_aux([H|T],P,N,[H|T1],I,NE):-
+	I \= P,
 	I1 is I + 1,
 	move_aux(T,P,N,T1,I1,NE).
+move_aux([H|T],P,N,[NE|T1],I,NE):-
+	I=P,
+	P1 is P + sign(H),
+	I1 is I + 1,
+	move_aux(T,P1,N1,T1,I1,H).
 move_aux([],_,_,[],_,_).
 	
 /* Set row and collumn */	
