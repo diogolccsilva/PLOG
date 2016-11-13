@@ -81,16 +81,36 @@ check_move(B,R,C,N,D):-
 	fail.
 
 check_horizontal(B,R,C,N,D):-
+	D = 0,
 	get_row(B,R,L),
+	!,
 	return_position(B,R,C,P),
 	V is mod(P,4),
 	check(L,C,V,N).
+check_horizontal(B,R,C,N,D):-
+	D = 1,
+	get_row(B,R,L),
+	reverse_list(L,L1),
+	!,
+	return_position(B,R,C,P),
+	V is mod(P,4),
+	check(L1,C,V,N).
 
 check_vertical(B,R,C,N,D):-
+	D = 0,
 	get_col(B,C,L),
+	!,
 	return_position(B,R,C,P),
 	V is mod(P,4),
 	check(L,R,V,N).
+check_vertical(B,R,C,N,D):-
+	D = 1,
+	get_col(B,C,L),
+	reverse_list(L,L1),
+	!,
+	return_position(B,R,C,P),
+	V is mod(P,4),
+	check(L1,R,V,N).
 
 check(L,P,V,N):-
 	N1 is N + V,
@@ -110,6 +130,101 @@ check([H|T],P,V,N,I):-
 	check(T,P,V1,N1,I).
 check([H|T],P,V,N,I):-
 	N =< 0.
+
+/* Move */
+
+move(B,PR,PC,N,D,NB):-
+	D1 is D//2,
+	D1 = 0,
+	D2 is mod(D,2),
+	return_position(B,PR,PC,V),
+	V1 is V + 1,
+	move_horizontal(B,PR,PC,N,V1,D2,NB).
+move(B,PR,PC,N,D,NB):-
+	D1 is D//2,
+	D1 = 1,
+	D2 is mod(D,2),
+	return_position(B,PR,PC,V),
+	V1 is V + 1,
+	move_vertical(B,PR,PC,N,V1,D2,NB).
+move(B,PR,PC,N,D,NB):-
+	write('Invalid direction\n'),
+	fail.
+
+move_horizontal(B,PR,PC,N,V,D,NB):-
+	D = 0,
+	get_row(B,PR,L),
+	move_aux(L,PC,N,V,NL),
+	set_row(B,PR,NL,NB).
+move_horizontal(B,PR,PC,N,V,D,NB):-
+	D = 1,
+	get_row(B,PR,L),
+	reverse_list(L,L1),
+	move_aux(L1,10-PC,N,V,NL),
+	reverse_list(NL,FL),
+	set_row(B,PR,FL,NB).
+
+move_vertical(B,PR,PC,N,V,D,NB):-
+	D = 0,
+	get_col(B,PC,L),
+	move_aux(L,PR,N,V,NL),
+	set_col(B,PC,NL,NB).
+move_vertical(B,PR,PC,N,V,D,NB):-
+	D = 1,
+	get_col(B,PC,L),
+	reverse_list(L,L1),
+	move_aux(L1,10-PR,N,V,NL),
+	reverse_list(NL,FL),
+	set_col(B,PC,FL,NB).
+
+move_aux(L,P,0,V,L).
+move_aux(L,P,N,V,NL):-
+	N>0,
+	N1 is N - 1,
+	move_aux(L,P,V,NL1,1,0),
+	P1 is P + 1,
+	move_aux(NL1,P1,N1,V,NL).
+move_aux([H|T],P,N,[NE|T1],I,NE):-
+	N>=0,
+	N1 is N - 1,
+	I1 is I + 1,
+	move_aux(T,P,N1,T1,I1,H).
+move_aux([H|T],P,N,[NE|T1],I,NE):-
+	N>=0,
+	N1 is N - 1,
+	I1 is I + 1,
+	move_aux(T,P,N1,T1,I1,H).
+move_aux([H|T],P,N,[H|T1],I,NE):-
+	I1 is I + 1,
+	move_aux(T,P,N,T1,I1,NE).
+move_aux([],_,_,[],_,_).
+	
+/* Set row and collumn */	
+
+set_row(B,P,R,NB):-
+	set_row(B,P,R,NB,1).
+set_row([],_,_,[],_).
+set_row([H|T],P,R,[H|T1],I):-
+	I\=P,
+	I1 is I + 1,
+	set_row(T,P,R,T1,I1).
+set_row([H|T],P,R,[R|T1],I):-
+	I1 is I + 1,
+	set_row(T,P,R,T1,I1).
+
+set_col([],_,_,[]).
+set_col([H|T],P,[CH|CT],[H1|T1]):-
+	set_col(H,P,CH,H1,1),
+	set_col(T,P,CT,T1).
+set_col([],_,_,[],_).
+set_col([H|T],P,C,[H|T1],I):-
+	I \= P,
+	I1 is I + 1,
+	set_col(T,P,C,T1,I1).
+set_col([H|T],P,C,[C|T1],I):-
+	I1 is I + 1,
+	set_col(T,P,C,T1,I1).
+
 
 /* Count pieces for each color */
 
@@ -138,6 +253,14 @@ count_pieces_aux([H|T],N,A,C):-
 count_pieces_aux([H|T],N,A,C):-
 	count_pieces_aux(T,N,A,C).		
 
+/* Reverse list */
+
+reverse_list(IL,OL):-
+	reverse(IL,[],OL).    
+
+reverse([],OL,OL).
+reverse([H|T],L1,L2):-
+	reverse(T,[H|L1],L2).
 
 /* this is trash so far */
 

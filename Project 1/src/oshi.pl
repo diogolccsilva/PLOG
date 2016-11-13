@@ -32,13 +32,18 @@ startGame(GM):-
 	chooseGameMode.
 
 game(B,TURN):-
+	PL is mod(TURN,2),
 	display_board(B),
 	game_status(B),
-	game_turn(TURN),
-	askForPiece(PR, PC),
-	check_game(B),
+	game_turn(PL),
+	repeat,
+	askForPiece(B,PR,PC,P,PL),
+	askForMove(D,N,P),
+	check_move(B,PR,PC,N,D),
+	move(B,PR,PC,N,D,NB),
+	check_game(NB),
 	NT is TURN + 1,
-	game(B,NT).
+	game(NB,NT).
 game(B,_):-
 	write('End of game!\n').
 
@@ -51,13 +56,11 @@ game_status(B):-
 	write(R),
 	write(')\n').
 
-game_turn(TURN):-
-	CK is mod(TURN,2),
-	CK \= 0,
+game_turn(PL):-
+	PL \= 0,
 	write('Red\'s turn\n').
-game_turn(TURN):-
-	CK is mod(TURN,2),
-	CK = 0,
+game_turn(PL):-
+	PL = 0,
 	write('White\'s turn\n').
 
 check_game(B):-
@@ -72,15 +75,19 @@ check_game(B):-
 	fail.
 check_game(B).
 
-askForPiece(PR, PC):-
+askForPiece(B,PR,PC,P,PL):-
+	repeat,
 	askForRow(PR),
-	askForCol(PC).
+	askForCol(PC),
+	return_position(B,PR,PC,P),
+	PL1 is P//4,
+	(P \= 0, PL1 = PL),
+	!.
 
 askForRow(PR):-
 	repeat,
 	write('Choose Row of Piece to move (1 to 9): '),
     read(PR),
-	nl,
 	(PR < 10, PR > 0),
 	!.
 
@@ -88,6 +95,28 @@ askForCol(PC):-
 	repeat,
 	write('Choose Collumm of Piece to move (1 to 9): '),
     read(PC),
-	nl,
 	(PC < 10, PC > 0),
+	!.
+
+askForMove(D,N,P):-
+	askForDirection(D),
+	askForNumMoves(N,P).
+
+askForDirection(D):-
+	repeat,
+	write('Directions:\n'),
+	write('0. Right;\n'),
+	write('1. Left;\n'),
+	write('2. Down;\n'),
+	write('3. Up;\n'),
+	write('Choose in which direction you want to move: '),
+	read(D),
+	(D>=0,D=<3),
+	!.
+
+askForNumMoves(N,P):-
+	repeat,
+	write('Choose the number of blocks you want to move: '),
+	read(N),
+	(N=<mod(P,4)),
 	!.
