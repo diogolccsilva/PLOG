@@ -78,7 +78,12 @@ askForMove(PR, PC, TR, TC):-
 
 	
 	
-/* felt like doing function to count pieces */
+/* Count pieces for each color */
+
+count_total(B,C):-
+	count_white(B,C1),
+	count_red(B,C2),
+	C is C1 + C2.
 
 count_white(B,C):-
 	count_pieces(B,4,0,C).
@@ -94,24 +99,10 @@ count_pieces([],_,C,C).
 count_pieces_aux([],_,C,C).
 count_pieces_aux([H|T],N,A,C):-
 	(H < N, H > N - 4),
-	write('1 piece\n'),
 	A1 is A+1,
-	write(A1),
-	nl,
 	count_pieces_aux(T,N,A1,C).
 count_pieces_aux([H|T],N,A,C):-
-	count_pieces_aux(T,N,A,C).
-
-/*
-count_piecesAux([H|T],R,W) :-
-		(H = 1;H = 2;H = 3),
-		W1 is W + 1,
-		count_piecesAux(T,R,W1).
-		
-count_piecesAux([H|T],R,W) :-
-		(H = 4;H = 5;H = 6),
-		R1 is R + 1,
-		count_piecesAux(T,R1,W).*/		
+	count_pieces_aux(T,N,A,C).		
 	
 
 /* this is trash so far */
