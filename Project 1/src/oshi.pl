@@ -64,13 +64,13 @@ game_turn(PL):-
 	write('White\'s turn\n').
 
 check_game(B):-
-	count_red(B,C),
-	C = 0,
+	count_points_red(B,C),
+	C < 7,
 	write('White wins, congrats!\n'),
 	fail.
 check_game(B):-
-	count_white(B,C),
-	C = 0,
+	count_points_white(B,C),
+	C < 7,
 	write('Red wins, congrats!\n'),
 	fail.
 check_game(B).
