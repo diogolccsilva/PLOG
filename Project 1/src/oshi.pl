@@ -48,9 +48,9 @@ game(B,_):-
 	write('End of game!\n').
 
 game_status(B):-
-	count_white(B,W),
-	count_red(B,R),
-	write('(White - '),
+	count_points_white(B,W),
+	count_points_red(B,R),
+	write('Points (White - '),
 	write(W),
 	write(') (Red - '),
 	write(R),
