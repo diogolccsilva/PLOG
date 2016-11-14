@@ -249,7 +249,27 @@ count_pieces_aux([H|T],N,A,C):-
 	A1 is A+1,
 	count_pieces_aux(T,N,A1,C).
 count_pieces_aux([H|T],N,A,C):-
-	count_pieces_aux(T,N,A,C).		
+	count_pieces_aux(T,N,A,C).	
+
+count_points_white(B,C):-
+	count_points(B,4,0,C).
+
+count_points_red(B,C):-
+	count_points(B,8,0,C).
+
+count_points([H|T],N,A,C):-
+	count_points_aux(H,N,A,C1),
+	!,
+	count_points(T,N,C1,C).
+count_points([],_,C,C).
+
+count_points_aux([],_,C,C).
+count_points_aux([H|T],N,A,C):-
+	(H < N, H > N - 4),
+	A1 is A+H,
+	count_points_aux(T,N,A1,C).
+count_points_aux([H|T],N,A,C):-
+	count_points_aux(T,N,A,C).
 
 /* Reverse list */
 
