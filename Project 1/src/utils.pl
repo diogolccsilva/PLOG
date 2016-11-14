@@ -266,10 +266,30 @@ count_points([],_,C,C).
 count_points_aux([],_,C,C).
 count_points_aux([H|T],N,A,C):-
 	(H < N, H > N - 4),
-	A1 is A+H,
+	V is mod(H,4),
+	A1 is A+V,
 	count_points_aux(T,N,A1,C).
 count_points_aux([H|T],N,A,C):-
 	count_points_aux(T,N,A,C).
+
+randomPiece(B,PR,PC,P,PL):-
+	repeat,
+	PR is random(9) + 1,
+	PC is random(9) + 1,
+	return_position(B,PR,PC,P),
+	PL1 is P//4,
+	(P \= 0, PL1 = PL),
+	!.
+randomMove(D,N,P):-
+	randomDirection(D),
+	randomNumMoves(N,P).
+
+randomDirection(D):-
+	D is random(4).
+
+randomNumMoves(N,P):-
+	V is mod(P,4),
+	N is random(V) + 1.
 
 /* Reverse list */
 

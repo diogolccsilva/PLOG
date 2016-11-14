@@ -16,22 +16,18 @@ chooseGameMode :-
 	startGame(GM).
 
 startGame(GM):-
-	GM = 1,
+	GM >= 1,
+	GM =< 4,
 	default_board(B),
-	game(B,0).
-startGame(GM):-
-	GM = 2.
-startGame(GM):-
-	GM = 3.
-startGame(GM):-
-	GM = 4.
+	game(GM,B,0).
 startGame(GM):-
 	write('Option '),
 	write(GM),
 	write(' is not a valid game mode!\n'),
 	chooseGameMode.
 
-game(B,TURN):-
+game(GM,B,TURN):-
+	GM = 1,
 	PL is mod(TURN,2),
 	display_board(B),
 	game_status(B),
@@ -41,10 +37,30 @@ game(B,TURN):-
 	askForMove(D,N,P),
 	check_move(B,PR,PC,N,D),
 	move(B,PR,PC,N,D,NB),
+	!,
 	check_game(NB),
 	NT is TURN + 1,
-	game(NB,NT).
-game(B,_):-
+	game(GM,NB,NT).
+game(GM,B,TURN):-
+	GM = 2,
+	PL is mod(TURN,2),
+	display_board(B),
+	game_status(B),
+	game_turn(PL),
+	repeat,
+	randomPiece(B,PR,PC,P,PL),
+	randomMove(D,N,P),
+	check_move(B,PR,PC,N,D),
+	move(B,PR,PC,N,D,NB),
+	!,
+	check_game(NB),
+	NT is TURN + 1,
+	game(GM,NB,NT).
+game(GM,B,TURN):-
+	GM >= 3,
+	GM =< 4,
+	write('WORK IN PROGRESS\n').
+game(_,B,_):-
 	write('End of game!\n').
 
 game_status(B):-
