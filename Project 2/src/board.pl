@@ -33,6 +33,5 @@ addNumberedCells(Board,[(Position,Value)|T]):-
 
 addNumberedCell(Board,(X,Y),Value):-
 	nth1(Y,Board,Line),
-	nl,
 	cell(0,Value,Cell),
 	nth1(X,Line,Cell).
