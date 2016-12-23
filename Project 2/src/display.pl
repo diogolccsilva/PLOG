@@ -28,6 +28,11 @@ displayBoardLine([(Type,Value)|T]):-
 	write('|'),
 	displayValue(Value),
 	displayBoardLine(T).
+displayBoardLine([(Type,Value)|T]):-
+	Type \= 0,
+	write('|'),
+	displayArrow(Value),
+	displayBoardLine(T).
 displayBoardLine([_|T]):-
 	write('|  '),
 	displayBoardLine(T).
@@ -63,3 +68,13 @@ displayLineAux(N):-
             displayLineAux(N1).
 displayLineAux(_):-
             nl.
+
+arrow(0,'N').
+arrow(1,'S').
+arrow(2,'E').
+arrow(3,'O').
+
+displayArrow(Value):-
+	arrow(Value,Arrow),
+	write(' '),
+	write(Arrow).
