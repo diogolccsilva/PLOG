@@ -31,13 +31,15 @@ displayBoardLine([(Type,Value)|T]):-
 displayBoardLine([(Type,Value)|T]):-
 	Type \= 0,
 	write('|'),
-	displayArrow(Value),
+	displayValue(Value),
+	%displayArrow(Value),
 	displayBoardLine(T).
 displayBoardLine([_|T]):-
 	write('|  '),
 	displayBoardLine(T).
 
 displayValue(Value):-
+	Value >= 0,
 	Value < 10,
 	write(' '),
 	write(Value).

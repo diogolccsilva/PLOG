@@ -1,10 +1,5 @@
+/* -*- Mode:Prolog; coding:iso-8859-1; indent-tabs-mode:nil; prolog-indent-width:8; prolog-paren-indent:3; tab-width:8; -*- */
 
-getPiece(Piece, Board,X,Y):-
-	nth1(Y,Board,Row),
-	nth1(X,Row,Piece),
-	getPieceValue(Piece,Value),
-	getPieceType(Piece,Type).
-	
-getPieceType((Type,_),Type).
-
-getPieceValue((_,Value),Value).
+:- use_module(library(clpfd)).
+:- use_module(library(lists)).
+:- consult(matrixRep),consult(utilities),consult(restricts),consult(solve),consult(boardDomain),consult(test),consult(board),consult(display).
